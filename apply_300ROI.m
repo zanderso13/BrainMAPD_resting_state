@@ -2,16 +2,18 @@
 % some dependencies. Names CanlabCore (freely available on Github) and
 % other elements in this repository.
 
+function apply_300ROI(PID)
+
 % 1. Identify where subject files are held. This will be designed to read
 % in residual files generated following the application of SPM12 to resting
 % state data. This means that preprocessing and data cleaning have already
 % occurred at this point.
 
-datadir = '/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/test_firstlevel_out';
-
+datadir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels';
+outdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/conn_matrices';
 % 2. Load in residual nii's using functions from CanlabCore.
 
-dat = fmri_data(filenames(fullfile(datadir, '*/ses-2/run-1/rest/Res*nii')));
+dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',PID,'/ses-2/run-1/rest/Res*nii'))));
 
 % display some QA
 
@@ -39,3 +41,7 @@ end
 % 6. corr2 function will now turn this into a 300x300 correlation matrix
 
 corr_mat = corr(temp_matrix);
+curr_fname = strcat(outdir, '_', PID, '_matrix.mat');
+save(curr_fname, 'corr_mat')
+
+end
