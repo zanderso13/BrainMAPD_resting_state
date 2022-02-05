@@ -13,11 +13,11 @@ datadir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels'
 outdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/conn_matrices';
 % 2. Load in residual nii's using functions from CanlabCore.
 
-dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',PID,'/ses-2/run-1/rest/Res*nii'))));
+dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',num2str(PID),'/ses-2/run-1/rest/Res*nii'))));
 
 % display some QA
 
-descriptives(dat)
+% descriptives(dat)
 
 % 3. Load atlas object, currently saved as a .mat so this is easy
 
@@ -41,7 +41,7 @@ end
 % 6. corr2 function will now turn this into a 300x300 correlation matrix
 
 corr_mat = corr(temp_matrix);
-curr_fname = strcat(outdir, '_', PID, '_matrix.mat');
+curr_fname = fullfile(outdir,strcat(num2str(PID), '_matrix.mat'));
 save(curr_fname, 'corr_mat')
 
 end
