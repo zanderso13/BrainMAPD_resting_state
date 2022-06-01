@@ -19,22 +19,22 @@
 % Define some paths
 % This is going to generate a first level script to be submitted to the
 % cluster with each run. Where do you want all these .sh scripts saved?
-scriptdir = '/projects/b1108/projects/MWMH_project/first_levels/quest_submission';
+scriptdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_hyperalignment/quest_submission';
 
 % Where are all your scripts saved for first levels? i.e. where is the
 % acnlab_repo folder? Also where is spm12... you need spm
 
-repodir = '/projects/p30985/repos';
+repodir = '/home/zaz3744/repo';
 
 % directories
 % first is where your stats files will be output to
-directories{1} = '/projects/b1108/projects/BrainMAPD_func_conn/first_levels';
+directories{1} = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_hyperalignment';
 % next is where the preprocessed data is
-directories{2} = '/projects/b1108/projects/MWMH_project/fmriprep';
+directories{2} = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/fmriprep';
 % where the raw data lives (raw meaning before preprocessing)
 directories{3} = '/projects/b1108/data/BrainMAPD';
 % where framewise displacement files will be saved
-directories{4} = '/projects/b1108/projects/BrainMAPD_func_conn/first_levels/FD';
+directories{4} = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_hyperalignment/FD';
 
 % What run of your task are you looking at?
 run = 1;
@@ -45,7 +45,7 @@ ses = 2;
 overwrite = 0;
 % Last thing is janky but bear with me. How long are your participant ID's?
 % i.e. 10234 would correspond with a 5 for this variable
-ID_length = 3;
+ID_length = 5;
 
 %%%%%%% END USER DEFINED %%%%%%%%%%
 
@@ -59,7 +59,7 @@ sublist = string(sublist);
 % option will still be helpful here to turn things on or off.
 
 if overwrite == 0
-    fl_list = filenames(fullfile(directories{1},'*/ses-2/',strcat('run-',num2str(run)),'/REST/SPM.mat'));
+    fl_list = filenames(fullfile(directories{1},'*/ses-2/',strcat('run-',num2str(run)),'/rest/SPM.mat'));
     counter = 1;
     for sub = 1:length(sublist)
         curr_sub = num2str(sublist(sub));
@@ -75,6 +75,7 @@ end
 % Run/submit first level script
 
 cd(scriptdir)
+keyboard
 for sub = 1:length(new_list)
     ids = new_list(sub);
 %    ses = 2;
@@ -83,11 +84,11 @@ for sub = 1:length(new_list)
 %     run_subject_firstlevel_REST(ids,ses,run,overwrite)
 
         s = ['#!/bin/bash\n\n'...
-     '#SBATCH -A p30985\n'...
+     '#SBATCH -A p30954\n'...
      '#SBATCH -p short\n'...
-     '#SBATCH -t 00:10:00\n'...  
-     '#SBATCH --mem=30G\n\n'...
-     'matlab -nodisplay -nosplash -nodesktop -r "addpath(genpath(''' repodir ''')); run_subject_firstlevel_MWMH_rest(' num2str(ids) ', ' num2str(ses) ',' num2str(run) ',' num2str(overwrite) '); quit"\n\n'];
+     '#SBATCH -t 00:45:00\n'...  
+     '#SBATCH --mem=64G\n\n'...
+     'matlab -nodisplay -nosplash -nodesktop -r "addpath(genpath(''' repodir ''')); run_subject_firstlevel_BrainMAPD_rest(' num2str(ids) '); quit"\n\n']; %, ' num2str(ses) ',' num2str(run) ',' num2str(overwrite) '); quit"\n\n'];
    
      scriptfile = fullfile(scriptdir, 'first_level_script.sh');
      fout = fopen(scriptfile, 'w');

@@ -5,7 +5,7 @@
 
     
  
-function run_subject_firstlevel_MWMH_rest(PID)
+function run_subject_firstlevel_BrainMAPD_rest(PID)
 %% var set up
 if nargin==0 % defaults just for testing 
     % Define some 
@@ -22,18 +22,18 @@ basedir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only';
 
 % directories
 % first is where your stats files will be output to
-directories{1} = fullfile(basedir,'first_levels');
+directories{1} = fullfile(basedir,'first_levels_hyperalignment');
 % next is where the preprocessed data is
 directories{2} = fullfile(basedir,'fmriprep');
 % where the raw data lives (raw meaning before preprocessing)
 directories{3} = '/projects/b1108/data/BrainMAPD';
 % directories{3} = '/home/zaz3744/ACNlab/data/MWMH';
 % where framewise displacement files will be saved
-directories{4} = fullfile(basedir,'first_levels/FD');
+directories{4} = fullfile(basedir,'first_levels_hyperalignment/FD');
 
 % This is going to generate a first level script to be submitted to the
 % cluster with each run. Where do you want all these .sh scripts saved?
-scriptdir = fullfile(basedir,'/first_levels/quest_submission');
+scriptdir = fullfile(basedir,'/first_levels_hyperalignment/quest_submission');
 
 % Where are all your scripts saved for first levels? i.e. where is the
 % acnlab_repo folder? Also where is spm12... you need spm
@@ -42,14 +42,14 @@ repodir = '~/repo';
 
 % directories
 % first is where your stats files will be output to
-directories{1} = fullfile(basedir,'first_levels');
+directories{1} = fullfile(basedir,'first_levels_hyperalignment');
 % next is where the preprocessed data is
 directories{2} = fullfile(basedir,'fmriprep');
 % where the raw data lives (raw meaning before preprocessing)
 % directories{3} = '/projects/b1108/data/BrainMAPD';
 directories{3} = '/home/zaz3744/ACNlab/data/BrainMAPD';
 % where framewise displacement files will be saved
-directories{4} = fullfile(basedir,'first_levels/FD');
+directories{4} = fullfile(basedir,'first_levels_hyperalignment/FD');
 
 fl_dir = directories{1};
 preproc_dir = directories{2};
@@ -65,7 +65,7 @@ PID = strcat('sub-',num2str(PID));
 fprintf(['Preparing 1st level model for REST task for ' PID ' / ' ses], ['Overwrite = ' num2str(overwrite)]);
 
 
-ndummies = 4;
+ndummies = 10;
 TR = .555;
 
 %% Model for REST task
@@ -75,7 +75,7 @@ in{1} = {fullfile(fl_dir, PID, strcat('ses-',num2str(ses)), strcat('run-', num2s
 
 % preproc images
 rundir = fullfile(preproc_dir, PID, strcat('ses-',num2str(ses)), 'func');
-in{2} = cellstr(spm_select('ExtFPList', rundir, strcat('ssub.*task-REST_run-',num2str(run),'_space-MNI152NLin2009cAsym_desc-preproc_bold.nii'), ndummies+1:9999));
+in{2} = cellstr(spm_select('ExtFPList', rundir, strcat('^sub.*task-REST_run-',num2str(run),'_space-MNI152NLin2009cAsym_desc-preproc_bold.nii'), ndummies+1:9999));
     
 if isempty(in{2}{1})
     warning('No preprocd functional found')
@@ -93,7 +93,7 @@ cd(fullfile(preproc_dir, PID));
 
 % get nuis covs
 
-[Rfull, Rselected, n_spike_regs, FD] = make_nuisance_from_fmriprep_output_restMWMH(confound_fname{run}, rawrun, TR, 20);
+[Rfull, Rselected, n_spike_regs, FD] = make_nuisance_from_fmriprep_output_restMWMH(confound_fname{run}, rawrun, TR, 0);
 save(fullfile(save_dir, strcat(PID, '_ses', num2str(ses), '_run', num2str(run), '.mat')), 'FD')
 
 
@@ -109,8 +109,7 @@ R = R(ndummies+1:end, :); %discard dummy vols
 names = R.Properties.VariableNames;
 R = table2array(R);
 
-save(fullfile(preproc_dir,'rest_confounds.mat'),'R','names');
-confoundFile = fullfile(preproc_dir,'rest_confounds.mat');
+confoundFile = fullfile(fl_dir, PID, strcat('ses-',num2str(ses)), strcat('run-', num2str(run)), 'rest','rest_confounds.mat');
 in{3} = {confoundFile};
 
 % checks
@@ -135,6 +134,7 @@ end
 if ~skip
     % make dir for beta and contrast files
     if ~isdir(in{1}{1}), mkdir(in{1}{1}); end
+    save(fullfile(fl_dir, PID, strcat('ses-',num2str(ses)), strcat('run-', num2str(run)), 'rest','rest_confounds.mat'),'R','names');
 
 
     % run spm FL estimation
