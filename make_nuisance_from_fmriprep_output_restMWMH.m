@@ -222,7 +222,7 @@ gsr_final = array2table(gsr_final);gsr_final.Properties.VariableNames = {'global
 white_matter_final = R.white_matter;
 white_matter_final = array2table(white_matter_final);white_matter_final.Properties.VariableNames = {'white_matter_final'};
 
-Rselected = [motion_final,framewise_displacement_final,csf_final,white_matter_final,gsr_final,Rselected];
+Rselected = [motion_final,framewise_displacement_final,csf_final,white_matter_final,Rselected];
 % compute and output how many spikes total
 n_spike_regs = sum(dvars_cols | spike_cols | additional_spike_cols)
 n_spike_regs_percent = n_spike_regs / height(R)
