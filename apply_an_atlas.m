@@ -26,7 +26,7 @@ dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',num2str(PID),'/ses-2/ru
 
 % 3. Load atlas object, currently saved as a .mat so this is easy
 
-load('CEN_atlas.mat')
+load('ERN_atlas.mat')
 
 % 4. Go into loop that will create a series of vectors for each of the 300
 % regions of interest
@@ -53,7 +53,7 @@ network = dat.dat(logical(atl.dat),:);
 % 6. corr2 function will now turn this into a 300x300 correlation matrix
 
 corr_mat = corr(network');
-curr_fname = fullfile(outdir,strcat(num2str(PID), '_CEN_matrix.mat'));
+curr_fname = fullfile(outdir,strcat(num2str(PID), '_ERN_matrix.mat'));
 save(curr_fname, 'corr_mat')
 
 end
