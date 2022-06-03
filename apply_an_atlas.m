@@ -46,7 +46,7 @@ end
 % 6. corr2 function will now turn this into a 300x300 correlation matrix
 
 corr_mat = corr(temp_matrix);
-curr_fname = fullfile(outdir,strcat(num2str(PID), '_matrix.mat'));
+curr_fname = fullfile(outdir,strcat(num2str(PID), '_CEN_matrix.mat'));
 save(curr_fname, 'corr_mat')
 
 end
