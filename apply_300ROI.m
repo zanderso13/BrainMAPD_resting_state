@@ -14,8 +14,8 @@ end
 % state data. This means that preprocessing and data cleaning have already
 % occurred at this point.
 
-datadir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_hyperalignment';
-outdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/conn_300ROI_hyp';
+datadir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_no_gsr';
+outdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/conn_matrices_AIB';
 % 2. Load in residual nii's using functions from CanlabCore.
 
 dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',num2str(PID),'/ses-2/run-1/rest/Res_0*nii'))));
