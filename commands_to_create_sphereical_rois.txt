@@ -1,0 +1,7 @@
+# need to get voxel coords using fsleyes. NOT MNI space
+# each coord is followed by a 1 as an argument so this is for voxel coordinates 38 64 42
+fslmaths $FSLDIR/data/standard/MNI152_T1_2mm.nii.gz -mul 0 -add 1 -roi 38 1 64 1 42 1 0 1 Caud -odt float
+
+fslmaths Caud.nii.gz -kernel sphere 5 -fmean Caudsphere -odt float
+
+fslmaths Caudsphere.nii.gz -bin CaudFinal.nii.gz
