@@ -26,7 +26,7 @@ dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',num2str(PID),'/ses-2/ru
 
 % 3. Load atlas object, currently saved as a .mat so this is easy
 
-load('CEN.mat')
+load('CEN_atlas.mat')
 
 % 4. Go into loop that will create a series of vectors for each of the 300
 % regions of interest
