@@ -1,9 +1,9 @@
 % directories
 % first is where your stats files will be output to
 preprocdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/fmriprep';
-datadir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_hyperalignment';
+datadir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_no_gsr';
 repodir = '/home/zaz3744/repo/';
-scriptdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_hyperalignment/quest_submission';
+scriptdir = '/projects/b1108/projects/BrainMAPD_preproc_rest_T1_only/first_levels_no_gsr/quest_submission';
 
 file_list = filenames(fullfile(preprocdir,strcat('sub-*/ses-2/func/sub*preproc_bold.nii')));
 for i = 1:length(file_list)
@@ -23,7 +23,7 @@ for sub = 1:length(sublist)
        '#SBATCH -p short\n'...
        '#SBATCH -t 00:30:00\n'...  
        '#SBATCH --mem=64G\n\n'...
-       'matlab -nodisplay -nosplash -nodesktop -r "addpath(genpath(''' repodir ''')); cingulate_to_wholebrain(' PID '); quit"\n\n'];
+       'matlab -nodisplay -nosplash -nodesktop -r "addpath(genpath(''' repodir ''')); apply_an_atlas(' PID '); quit"\n\n'];
    
        scriptfile = fullfile(scriptdir, 'func_conn_script.sh');
        fout = fopen(scriptfile, 'w');
