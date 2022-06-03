@@ -31,21 +31,28 @@ load('CEN_atlas.mat')
 % 4. Go into loop that will create a series of vectors for each of the 300
 % regions of interest
 
-r = extract_roi_averages(dat,atl);
+% r = extract_roi_averages(dat,atl);
 
-% 5. The above command yields a 1x300 'region object'. This is effectively
+% For CEN/ERN I'm creating a slightly different workflow. This works by
+% just directly pulling from the data object, voxels that are currently
+% tagged as within each network. 
+network = dat.dat(logical(atl.dat),:);
+
+% 5. One instance of the above command yields a 1x300 'region object'. This is effectively
 % a series of cells where average timecourse data from each ROI is stored
-% in r(ROI_number).dat
+% in r(ROI_number).dat. The other, yields the network variable. This
+% reflects the timeseries data of all voxels within the network that can
+% now be correlated
 
 % Pull this data into a giant matrix.
 
-for i = 1:length(r)
-    temp_matrix(:,i) = r(i).dat(:,1);
-end
+% for i = 1:length(r)
+%     temp_matrix(:,i) = r(i).dat(:,1);
+% end
 
 % 6. corr2 function will now turn this into a 300x300 correlation matrix
 
-corr_mat = corr(temp_matrix);
+corr_mat = corr(network');
 curr_fname = fullfile(outdir,strcat(num2str(PID), '_CEN_matrix.mat'));
 save(curr_fname, 'corr_mat')
 
