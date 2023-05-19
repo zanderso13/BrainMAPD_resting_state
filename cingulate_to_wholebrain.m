@@ -25,30 +25,40 @@ dat = fmri_data(filenames(fullfile(datadir,strcat('sub-',num2str(PID),'/ses-2/ru
 % descriptives(dat)
 
 % 3. Load atlas object, currently saved as a .mat so this is easy
-
 load('AAL3_1mm.mat')
 
 % 4. Go into loop that will create a series of vectors for each of the 300
 % regions of interest
 
-r = extract_roi_averages(dat,atl);
+r = atlas2region(atl);
 
-% 5. The above command yields a 1x160 'region object'. Now, we want to pull
-% those regions that are specific to the cingulate cortex. These will act
-% as our seeds. Then we correlate those seeds with the rest of the brain 
+counter = 1;
+for reg = 1:length(r)
+    if contains(r(reg).shorttitle,'ACC_') == 1
+        ACCmask(counter) = r(reg);
+        counter = counter + 1;
+    end
+end
 
-subgen = mean([r(145).dat,r(146).dat],2);
-pregen = mean([r(147).dat,r(148).dat],2);
-sup = mean([r(149).dat,r(150).dat],2);
+subgen_ACCmask = ACCmask(1:2);
+pregen_ACCmask = ACCmask(3:4);
+superior_ACCmask = ACCmask(5:6);
+
+ACCdat = extract_data(subgen_ACCmask,dat);
+mean_ACC_signal = (ACCdat(1).dat + ACCdat(2).dat) ./ 2;
+
+% 5. The above command yields a 1x2 'region object' that is currently specific to the subgenual ACC. 
+% Create a loop, that correlates and does r to z transformation on every
+% brain voxel with average subgen ACC activation.
+
+corr_dat = dat; corr_dat.dat = []; 
 for voxel = 1:length(dat.dat)
-     subgen_mat(voxel,1) = atanh(corr(dat.dat(voxel,:)', subgen));
-     pregen_mat(voxel,1) = atanh(corr(dat.dat(voxel,:)', pregen));
-     sup_mat(voxel,1) = atanh(corr(dat.dat(voxel,:)', sup));
+     corr_dat.dat(voxel,1) = atanh(corr(dat.dat(voxel,:)', mean_ACC_signal));   
 end
 
 % 6. save resulting variables for each subject
 
-curr_fname = fullfile(outdir,strcat(num2str(PID), '_ACC_matrix.mat'));
-save(curr_fname, 'subgen_mat', 'pregen_mat', 'sup_mat')
+curr_fname = fullfile(outdir,strcat(num2str(PID), '_ACCconnectivity.nii'));
+write(corr_dat, 'fname', curr_fname)
 
 end
