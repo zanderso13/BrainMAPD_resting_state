@@ -1,20 +1,27 @@
 hyperalignment = 0;
 
-load('/Volumes/DataCave/ACNlab/BrainMAPD/RS/outcomes/trilevel.mat')
-load('/Volumes/DataCave/ACNlab/BrainMAPD/RS/outcomes/immune_data.mat')
-load('/Volumes/DataCave/ACNlab/BrainMAPD/RS/outcomes/meds.mat')
-load('/Volumes/DataCave/ACNlab/BrainMAPD/RS/outcomes/demographics.mat')
-load('/Users/zaz3744/Documents/GitHub/BrainMAPD_resting_state/AAL3_1mm.mat')
-load('/Volumes/DataCave/ACNlab/BrainMAPD/RS/outcomes/scan_day.mat')
+load('/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/outcomes/trilevel.mat')
+load('/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/outcomes/immune_data.mat')
+load('/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/outcomes/meds.mat')
+load('/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/outcomes/demographics.mat')
+%load('/Users/zaz3744/Documents/GitHub/BrainMAPD_resting_state/AAL3_1mm.mat')
+load('/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/outcomes/scan_day.mat')
 
 exclusions = {'10001','10041','10034','10041',...
     '10059','10067','10081','10088','10111','10135',...
     '10141','10196','10282','10309','10336','10438','10439',...
     '20085','20108','20644','21238','21257','21268',...
     '20133','20460','20948','20309','20996','21001',...
-    '21523','20309'};
+    '21523',... % start immune exclusions
+    '10010','10041','10066','10092','10141',...
+    '10176','10186','10256','10264','10271','10274',...
+    '10315','10322','10328','10332','10341','10434',...
+    '10454','10458','10471','20083','20124','20302',...
+    '20507','20530','20630','20897','20902','20903',...
+    '20915','20934','20949','21223','21325','21539',... % need to start some final exclusions where data isn't being extracted the way that it should. Eventually I need to dig into this more. But for the data blitz let's just drop them and move on
+    '20235','21661'};
 
-fnames = filenames(fullfile('/Volumes/DataCave/ACNlab/BrainMAPD/RS/conn_matrices_ha/*hyp.mat'));
+fnames = filenames(fullfile('/Users/zacharyanderson/Documents/ACNlab/BrainMAPD/RS/conn_matrices_AIB/*CEN*.mat'));
 
 % remove mat files from subject list
 for badsub = 1:length(exclusions)
