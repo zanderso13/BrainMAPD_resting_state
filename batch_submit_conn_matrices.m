@@ -23,7 +23,7 @@ for sub = 1:length(sublist)
        '#SBATCH -p short\n'...
        '#SBATCH -t 00:30:00\n'...  
        '#SBATCH --mem=64G\n\n'...
-       'matlab -nodisplay -nosplash -nodesktop -r "addpath(genpath(''' repodir ''')); apply_an_atlas(' PID '); quit"\n\n'];
+       'matlab -nodisplay -nosplash -nodesktop -r "addpath(genpath(''' repodir ''')); cingulate_to_wholebrain(' PID '); quit"\n\n'];
    
        scriptfile = fullfile(scriptdir, 'func_conn_script.sh');
        fout = fopen(scriptfile, 'w');
@@ -32,6 +32,6 @@ for sub = 1:length(sublist)
      
        !chmod 777 func_conn_script.sh
        !sbatch func_conn_script.sh
-
+        
 end
 

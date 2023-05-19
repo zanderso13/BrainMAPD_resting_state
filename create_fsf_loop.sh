@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 # Subject list for loop
 subs=`cat ${1}`          # make sure txt file is full fib file names
